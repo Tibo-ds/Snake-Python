@@ -33,6 +33,7 @@ def Clavier(event):
         Canevas.delete('snake1')
     
 
+
 def TestPomme():
     #Vérification du snake sur pomme
     global PosX,PosY,PosXPo,PosYPo,score,pomme,snake,mouvement,temps
@@ -51,21 +52,25 @@ def TestSnake():
     if len(parDessus) > 1:
         Perdu()
         
-    
+
                         
 def Perdu():
-    global fin
-    Canevas.delete()
-    
+    global fin, score
+    Canevas.destroy()
     fin = 1
-    for loop in range(score+2):
-        aSuppr = Canevas.find_all()[-1]
-        Canevas.delete(aSuppr)
 
-    Canevas.create_text(230,150, text="Vous avez perdu...", anchor = CENTER)
-        
+    fenetreFin = Tk()
+    fenetreFin.title("Perdu...")
+    fenetreFin.geometry('300x100+800+450')
+    texte = Label(fenetreFin, text='Vous avez perdu...')
+    texte.pack(pady = 10)
+    texte2 = Label(fenetreFin, text='Votre score : ')
+    texte2.pack(side = LEFT, padx = 20)
+    texteScore = Label(fenetreFin , text =str(score))
+    texteScore.pack(side = RIGHT, padx = 75)
     
    
+
 def SnakeBouger():
     #Deplacement du snake
     global PosX,PosY,PosXPo,PosYPo,score,pomme,snake,mouvement,taille,temps,fin
@@ -122,8 +127,8 @@ temps = 200
 fin = 0
 
 #Creation de la zone graphique 
-Largeur = 960
-Hauteur = 645
+Largeur = 955
+Hauteur = 640
 
 Canevas = Canvas(maFenetre, width= Largeur, height = Hauteur, bg= "white")
 snake = Canevas.create_rectangle(PosX-r, PosY-r, PosX+r, PosY+r, outline = 'black', fill = 'green', tags = 'snake1')
