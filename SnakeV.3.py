@@ -56,7 +56,7 @@ def TestSnake():
                         
 def Perdu():
     global fin, score
-    Canevas.destroy()
+    maFenetre.destroy()
     fin = 1
 
     fenetreFin = Tk()
