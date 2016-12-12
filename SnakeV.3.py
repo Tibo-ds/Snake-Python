@@ -98,7 +98,7 @@ def SnakeBouger():
     #Suppretion de la fin du snake
     if taille > 2:
         try:
-            aSuppr = Canevas.find_all()[-(score+2)]
+            aSuppr = Canevas.find_all()[-(score+1)*2]
             tag = Canevas.gettags(aSuppr)
             if tag[0] == 'snake':
                 Canevas.delete(aSuppr)
