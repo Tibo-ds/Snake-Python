@@ -5,13 +5,14 @@ Thibault de SURREL
 
 from tkinter import *
 from random import *
+from tkinter.messagebox import *
 
 def PommeBouger():
     #Positionnement aléatoire de la pomme
     global PosX,PosY,PosXPo,PosYPo,score,pomme
-    PosXPo = randint(1,48)
+    PosXPo = randint(2,47)
     PosXPo = (PosXPo * 20)
-    PosYPo = randint(1,32)
+    PosYPo = randint(2,31)
     PosYPo = (PosYPo * 20)
     pomme = Canevas.create_rectangle(PosXPo-r, PosYPo-r, PosXPo+r, PosYPo+r, outline = 'black', fill= 'red',tags ='pomme') 
     
@@ -55,25 +56,92 @@ def TestSnake():
 
                         
 def Perdu():
-    global fin, score
+    global fin, score,nbDerreurs, fenetreFin, nomJou, Champ,texte3
     maFenetre.destroy()
     fin = 1
 
+    
     fenetreFin = Tk()
     fenetreFin.title("Perdu...")
-    fenetreFin.geometry('300x100+800+450')
+    fenetreFin.geometry('300x300')
     texte = Label(fenetreFin, text='Vous avez perdu...')
     texte.pack(pady = 10)
-    texte2 = Label(fenetreFin, text='Votre score : ')
-    texte2.pack(side = LEFT, padx = 20)
-    texteScore = Label(fenetreFin , text =str(score))
-    texteScore.pack(side = RIGHT, padx = 75)
+    texte2 = Label(fenetreFin, text='Votre score : '+str(score))
+    texte2.pack()
+    texte3 = Label(fenetreFin, text='Entrez votre nom : ')
+    texte3.pack()    
+    nomJou = StringVar()
+    Champ = Entry(fenetreFin, textvariable = nomJou)
+    Champ.pack()
+    fenetreFin.bind('<Key>', RecupNom)
+
+def Highscore(nom):
+    global fenetreFin, score
+    
+    FichierScores = open('TopScores.txt').readlines()
+    FichierNoms = open('TopNoms.txt').readlines()
+    TopScore1 = int(FichierScores[0])
+    TopScore2 = int(FichierScores[1])
+    TopScore3 = int(FichierScores[2])
+    TopNom1 = FichierNoms[0]
+    TopNom2 = FichierNoms[1]
+    TopNom3 = FichierNoms[2]
+
+    if score > int(TopScore1):
+        TopScore3 = TopScore2
+        TopNom3 = TopNom2
+        TopScore2 = TopScore1
+        TopNom2 = TopNom1
+        TopScore1 = score
+        TopNom1 = str(nom)+'\n'
+    
+    elif score > int(TopScore2):
+
+        TopScore3 = TopScore2
+        TopNom3 = TopNom2
+        TopScore2 = score
+        TopNom2 = str(nom)+'\n'    
+    
+    elif score > int(TopScore3):
+
+        TopScore3 = score
+        TopNom3 = str(nom)+'\n'
+
+    FichierScores = open('TopScores.txt','w')
+    FichierScores.write(str(TopScore1)+'\n')
+    FichierScores.write(str(TopScore2)+'\n')
+    FichierScores.write(str(TopScore3)+'\n')
+    FichierScores.close()
+
+    FichierNoms = open('TopNoms.txt','w')
+    FichierNoms.write(TopNom1)
+    FichierNoms.write(TopNom2)
+    FichierNoms.write(TopNom3)
+    FichierNoms.close()
+    
+    texte0 = Label(fenetreFin, text = 'Classement : ')
+    texte0.pack(pady = 20)
+    texte1 = Label(fenetreFin,text = '1. ' + str(TopNom1) + str(TopScore1))
+    texte1.pack()
+    texte2 = Label(fenetreFin,text = '2. ' + str(TopNom2) + str(TopScore2))
+    texte2.pack()
+    texte3 = Label(fenetreFin,text = '3. ' + str(TopNom3) + str(TopScore3))
+    texte3.pack()
+
+def RecupNom(event):
+    touche = event.keysym
+    if touche == 'Return':
+        nom = nomJou.get()
+        Champ.destroy()
+        texte3.destroy()
+        Highscore(nom)
+
     
    
 
 def SnakeBouger():
     #Deplacement du snake
-    global PosX,PosY,PosXPo,PosYPo,score,pomme,snake,mouvement,taille,temps,fin
+    global PosX,PosY,PosXPo,PosYPo,score,pomme,snake,mouvement,taille,temps,fin,nbDerreurs
     if mouvement == 'up':
         PosY -= 20
         taille += 1
@@ -98,12 +166,13 @@ def SnakeBouger():
     #Suppretion de la fin du snake
     if taille > 2:
         try:
-            aSuppr = Canevas.find_all()[-(score+1)*2]
+            aSuppr = Canevas.find_all()[-((score+1)*2)]
             tag = Canevas.gettags(aSuppr)
             if tag[0] == 'snake':
                 Canevas.delete(aSuppr)
         except:
             pass
+            
 
 
     if fin != 1:
@@ -125,6 +194,8 @@ mouvement = "none"
 taille = 1
 temps = 200
 fin = 0
+nbDerreurs = 0
+
 
 #Creation de la zone graphique 
 Largeur = 955
