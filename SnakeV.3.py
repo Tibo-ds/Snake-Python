@@ -67,9 +67,9 @@ def Perdu():
     fenetre.geometry('300x400')
     texte = Label(fenetre, text='Vous avez perdu...',bg = couleur)
     texte.pack(pady = 10)
-    texte2 = Label(fenetre, text='Votre score : '+str(score))
+    texte2 = Label(fenetre, text='Votre score : '+str(score),bg = couleur)
     texte2.pack()
-    texte3 = Label(fenetre, text='Entrez votre nom : ')
+    texte3 = Label(fenetre, text='Entrez votre nom : ',bg = couleur)
     texte3.pack()
     nomJou = StringVar()
     Champ = Entry(fenetre, textvariable = nomJou)
@@ -139,7 +139,7 @@ def AfficheHighScore():
     texte0.pack(pady = 20)
     texte1 = Label(fenetre,text = '1. ' + str(TopNoms[0]) + str(TopScores[0]) + '\n 2. ' + str(TopNoms[1]) + str(TopScores[1]) + '\n 3. ' + str(TopNoms[2]) + str(TopScores[2]),bg = couleur)
 
-    texte1.pack(padx = 10, pady = 10)
+    texte1.pack(padx = 10, pady = 11)
 
     BoutonReJouer = Button(fenetre, text = "JOUER ?",  fg ='navy',command = Setup)
     BoutonReJouer.pack(pady = 10,padx = 10)
@@ -239,6 +239,20 @@ def Setup():
     maFenetre.mainloop()
 
 def Menu():
+    try:
+        Fichier = open('TopNoms.txt','r')
+    except:
+        Fichier = open('TopNoms.txt','w')
+        Fichier.write('a\na\na')
+        Fichier.close()                     
+
+    try:
+        Fichier = open('TopScores.txt','r')
+    except:
+        Fichier = open('TopScores.txt','w')
+        Fichier.write('-1\n-1\n-1')
+        Fichier.close()
+        
     global fenetre, fin
     if fin:
         fenetre.destroy()
@@ -269,7 +283,3 @@ def Credits():
 couleur = '#00f911'
 fin = 0
 Menu()
-
-
-                                                                      
-
